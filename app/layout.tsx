@@ -3,7 +3,7 @@ import { inter } from '@/app/ui/fonts'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: { template: '%s | interview-task', default: 'interview-task' },
+  title: { template: '%s | Reading List', default: 'Reading List' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

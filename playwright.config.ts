@@ -17,8 +17,9 @@ export default defineConfig({
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: `npm run build && npx next start --port ${port}`,
+    command: `rm -f data/e2e.db data/e2e.db-wal data/e2e.db-shm && npm run build && npx next start --port ${port}`,
     url: `http://localhost:${port}`,
+    env: { DATABASE_PATH: 'data/e2e.db' },
     reuseExistingServer: !isCI,
     timeout: 180_000,
   },

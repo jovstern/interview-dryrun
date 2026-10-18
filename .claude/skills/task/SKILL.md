@@ -15,6 +15,17 @@ each milestone's pull request (repo: `jovstern/interview-dryrun`, `main` is prot
 The app is already scaffolded (Next.js, all gates green). Read `CLAUDE.md`,
 `.claude/skills/stack-conventions/SKILL.md` and `.claude/skills/quality-gates/SKILL.md` first.
 
+## 0. Resume check (always first)
+
+If `docs/superpowers/plans/task.md` exists on any branch (`git log --all -- docs/superpowers/plans/task.md`),
+this is a resumed run, not a new one: do not ask the questions again.
+1. Read the spec and plan (from the newest milestone branch if `main` lacks them), `gh pr list
+   --state all`, and the ledger under `.superpowers/sdd/` if present.
+2. Work out where things stand: the last merged milestone, an open PR (then wait or handle
+   its comments), or a milestone branch with tasks done (then continue with the first task
+   the ledger does not mark complete).
+3. Tell the user in 3 lines where you are resuming, then continue from there.
+
 ## 1. Start (2 minutes)
 
 1. Start the dev server in the background (`npm run dev`) so the user can watch the app at
