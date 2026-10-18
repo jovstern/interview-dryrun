@@ -13,14 +13,17 @@ plan live in `docs/superpowers/`.
 
 ## How work happens
 
-- `/task` runs the whole job in one session on Opus: questions, spec and plan, build, README.
+- `/task` runs the whole job in one session on Opus: questions, spec and plan, then one
+  milestone at a time. Each milestone is a branch `mN-<slug>` and a pull request on
+  `jovstern/interview-task` with a review section and a demo GIF. **The user merges every
+  PR; Claude waits for the merge before starting the next milestone.**
 - Superpowers preferences for this project (they override the skills' defaults):
   - Brainstorming: one batch of questions, then one approval of spec and plan together.
-  - No git worktrees. Working directly on `main` is approved; one commit per task.
-  - Subagent-driven development continues from slice to slice without stopping; it posts a
-    short status after each slice.
-  - When finishing, do not show the merge/PR menu: commit on `main` and push if the user
-    chose GitHub.
+  - No git worktrees: work in place on the milestone branch; one commit per task.
+  - Subagent-driven development runs one milestone's tasks without stopping, then the
+    milestone review on Opus.
+  - When finishing a milestone, do not show the merge/PR menu: always push and open the PR,
+    then stop.
 
 ## This machine
 
@@ -43,5 +46,6 @@ plan live in `docs/superpowers/`.
 
 - Follow `.claude/skills/stack-conventions/SKILL.md` (the Next.js Learn course patterns) and
   `.claude/skills/quality-gates/SKILL.md`.
-- Never bypass a hook or check; never skip or delete a failing test.
+- Never push to `main` or merge a PR. Never bypass a hook or check; never skip or delete a
+  failing test.
 - Ask before changing lint, TypeScript, Next.js or test configuration.

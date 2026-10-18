@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # Turns a recording or screenshot into the phase's demo GIF and publishes it on the
 # pr-media branch, where the PR's Demo section links to it.
-# Usage: make-demo.sh <phase-number> <recording.webm|mp4|mov|png|jpg|gif>
+# Usage: make-demo.sh <milestone-number> <recording.webm|mp4|mov|png|jpg|gif>
 set -euo pipefail
 
-PHASE="${1:?Usage: make-demo.sh <phase-number> <recording-or-screenshot>}"
-SRC="${2:?Usage: make-demo.sh <phase-number> <recording-or-screenshot>}"
+PHASE="${1:?Usage: make-demo.sh <milestone-number> <recording-or-screenshot>}"
+SRC="${2:?Usage: make-demo.sh <milestone-number> <recording-or-screenshot>}"
 [ -f "$SRC" ] || { echo "No such file: $SRC" >&2; exit 1; }
-[[ "$PHASE" =~ ^[0-9]+(\.[0-9]+)?$ ]] || { echo "Phase must be a number, got: $PHASE" >&2; exit 1; }
+[[ "$PHASE" =~ ^[0-9]+(\.[0-9]+)?$ ]] || { echo "Milestone must be a number, got: $PHASE" >&2; exit 1; }
 
-# Zero-padded like the phase issue titles: 3 -> 03, 3.1 -> 03.1
+# Zero-padded: 3 -> 03, 3.1 -> 03.1
 PADDED="$(printf '%02d' "${PHASE%%.*}")"
 [[ "$PHASE" == *.* ]] && PADDED="$PADDED.${PHASE#*.}"
 
@@ -53,16 +53,16 @@ else
   find "$TREE" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
 fi
 
-mkdir -p "$TREE/phase-$PADDED"
-cp "$GIF" "$TREE/phase-$PADDED/demo.gif"
-git -C "$TREE" add "phase-$PADDED/demo.gif"
+mkdir -p "$TREE/m$PADDED"
+cp "$GIF" "$TREE/m$PADDED/demo.gif"
+git -C "$TREE" add "m$PADDED/demo.gif"
 if git -C "$TREE" diff --cached --quiet; then
   echo "Demo unchanged."
 else
   # The media branch holds only GIFs and has no node_modules, so the project's
   # pre-commit hook (lint/typecheck) has nothing to run on and is not installed here.
-  git -C "$TREE" -c core.hooksPath=/dev/null commit --quiet -m "docs: demo for phase $PADDED"
+  git -C "$TREE" -c core.hooksPath=/dev/null commit --quiet -m "docs: demo for M$PADDED"
   git -C "$TREE" push --quiet origin HEAD:refs/heads/pr-media
 fi
 
-echo "Published: https://github.com/$REPO/blob/pr-media/phase-$PADDED/demo.gif?raw=true"
+echo "Published: https://github.com/$REPO/blob/pr-media/m$PADDED/demo.gif?raw=true"

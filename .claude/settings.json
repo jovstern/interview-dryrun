@@ -27,7 +27,16 @@
       "Bash(bash .claude/skills/:*)",
       "Bash(bash /Users/yoav/.claude/plugins/cache/claude-plugins-official/superpowers/:*)",
       "Read(/Users/yoav/.claude/plugins/cache/claude-plugins-official/superpowers/**)",
-      "WebFetch(domain:nextjs.org)"
+      "WebFetch(domain:nextjs.org)",
+      "Bash(git push:*)",
+      "Bash(git switch:*)",
+      "Bash(git pull:*)",
+      "Bash(git fetch:*)",
+      "Bash(git worktree:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh api repos/jovstern/interview-task/:*)",
+      "Bash(ffmpeg:*)"
     ]
   }
 }
