@@ -1,12 +1,8 @@
 {
-  "enabledPlugins": {
-    "superpowers@claude-plugins-official": true
-  },
   "env": {
     "SUPERPOWERS_DISABLE_TELEMETRY": "1"
   },
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [
       "Bash(npm run:*)",
       "Bash(npm install:*)",
@@ -35,7 +31,7 @@
       "Bash(git worktree:*)",
       "Bash(gh pr:*)",
       "Bash(gh repo view:*)",
-      "Bash(gh api repos/jovstern/interview-task/:*)",
+      "Bash(gh api repos/jovstern/interview-dryrun/:*)",
       "Bash(ffmpeg:*)"
     ],
     "deny": [
@@ -45,6 +41,10 @@
       "Bash(git push origin main:*)",
       "Read(./.env)",
       "Read(./.env.*)"
-    ]
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true
   }
 }

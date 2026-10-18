@@ -1,4 +1,4 @@
-# interview-task
+# interview-dryrun
 
 A timed assignment built live with `/task` (Next.js App Router). The assignment, spec and
 plan live in `docs/superpowers/`.
@@ -15,7 +15,7 @@ plan live in `docs/superpowers/`.
 
 - `/task` runs the whole job in one session on Opus: questions, spec and plan, then one
   milestone at a time. Each milestone is a branch `mN-<slug>` and a pull request on
-  `jovstern/interview-task` with a review section and a demo GIF. **The user merges every
+  `jovstern/interview-dryrun` with a review section and a demo GIF. **The user merges every
   PR; Claude waits for the merge before starting the next milestone.**
 - Superpowers preferences for this project (they override the skills' defaults):
   - Brainstorming: one batch of questions, then one approval of spec and plan together.
@@ -29,12 +29,8 @@ plan live in `docs/superpowers/`.
 
 - **Databases:** the user chooses the database in `/task`'s question round. Never pick one
   or connect to one before they answer. The options available on this machine:
-  - **Neon Postgres:** Vercel Storage resource `interview-task-neon`, Frankfurt, empty.
-    `POSTGRES_URL` is in `.env` (git-ignored; never print, read or commit it). Use it as the
-    Next.js course does: the `postgres` package (installed), one client in `app/lib/db.ts`
-    (`postgres(process.env.POSTGRES_URL!, { ssl: 'require' })`), tagged-template SQL in
-    `app/lib/data.ts` and `app/lib/actions.ts`, and a seed script.
-    `node --env-file=.env scripts/db-check.mjs` checks that it answers.
+  - **Neon Postgres: not available in this dry run.** It is reserved for the real interview
+    folder; offer it in the question as unavailable so the question looks the same.
   - **SQLite** through `better-sqlite3`: tested here, no setup, and runs on anyone's machine.
   - **MongoDB:** runs locally at `mongodb://localhost:27017` (Homebrew service).
   - There is no local Postgres and no Docker.

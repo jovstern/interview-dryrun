@@ -10,7 +10,7 @@ disable-model-invocation: true
 Live, timed work (about 2–3 hours). Quality and wall-clock time come first; tokens do not
 matter. Everything happens in **this one session, on Opus**: no `/clear`, no model switches,
 no GitHub issues. The user stays in control through one approval of the plan and by merging
-each milestone's pull request (repo: `jovstern/interview-task`, `main` is protected).
+each milestone's pull request (repo: `jovstern/interview-dryrun`, `main` is protected).
 
 The app is already scaffolded (Next.js, all gates green). Read `CLAUDE.md`,
 `.claude/skills/stack-conventions/SKILL.md` and `.claude/skills/quality-gates/SKILL.md` first.
@@ -36,7 +36,7 @@ assumption.
 **The database is always one of the questions; never pick it yourself.** Unless the
 assignment names one, offer these options (see "Databases" in CLAUDE.md), each with a
 one-line trade-off for this assignment, and recommend one with the reason:
-- Neon Postgres (the empty `interview-task-neon` in `.env`),
+- Neon Postgres (not available in this dry run; list it as unavailable),
 - SQLite through `better-sqlite3` (local file, runs anywhere without credentials),
 - local MongoDB,
 - in-memory / JSON file (only if the assignment needs no real persistence).
