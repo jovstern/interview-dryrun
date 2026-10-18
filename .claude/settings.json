@@ -1,0 +1,33 @@
+{
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true
+  },
+  "env": {
+    "SUPERPOWERS_DISABLE_TELEMETRY": "1"
+  },
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(npm ci)",
+      "Bash(npx vitest:*)",
+      "Bash(npx playwright:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx prettier:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx next:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git show:*)",
+      "Bash(bash .claude/skills/:*)",
+      "Bash(bash /Users/yoav/.claude/plugins/cache/claude-plugins-official/superpowers/:*)",
+      "Read(/Users/yoav/.claude/plugins/cache/claude-plugins-official/superpowers/**)",
+      "WebFetch(domain:nextjs.org)"
+    ]
+  }
+}
