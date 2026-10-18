@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createBook, updateBookStatus } from './actions'
 import { getDb } from './db'
 
@@ -17,6 +17,17 @@ beforeEach(() => {
   getDb().exec('DELETE FROM books')
   vi.clearAllMocks()
 })
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
+
+function failDb() {
+  vi.spyOn(console, 'error').mockImplementation(() => {})
+  vi.spyOn(getDb(), 'prepare').mockImplementation(() => {
+    throw new Error('boom')
+  })
+}
 
 function form(values: Record<string, string>) {
   const data = new FormData()
@@ -87,6 +98,17 @@ describe('createBook', () => {
     expect(state.errors?.status).toEqual(['Choose a status'])
     expect(rows()).toEqual([])
   })
+
+  it('createBook returns a message when the insert fails', async () => {
+    const input = { title: 'Dune', author: 'Frank Herbert', status: 'reading' }
+    failDb()
+
+    const state = await createBook({}, form(input))
+
+    expect(state).toEqual({ message: 'Could not add the book. Please try again.', values: input })
+    expect(console.error).toHaveBeenCalled()
+    expect(redirect).not.toHaveBeenCalled()
+  })
 })
 
 describe('updateBookStatus', () => {
@@ -120,6 +142,26 @@ describe('updateBookStatus', () => {
     const state = await updateBookStatus(999, {}, form({ status: 'read' }))
 
     expect(state.message).toBe('This book no longer exists.')
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('updateBookStatus returns a message when the update fails', async () => {
+    const id = insertBook()
+    failDb()
+
+    const state = await updateBookStatus(id, {}, form({ status: 'read' }))
+
+    expect(state).toEqual({ message: 'Could not save the status. Please try again.' })
+    expect(console.error).toHaveBeenCalled()
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('updateBookStatus rejects a missing status', async () => {
+    const id = insertBook()
+    const state = await updateBookStatus(id, {}, form({}))
+
+    expect(state.message).toBe('Choose a status')
+    expect(rows()).toEqual([{ title: 'Dune', author: 'Frank Herbert', status: 'want_to_read' }])
     expect(revalidatePath).not.toHaveBeenCalled()
   })
 })

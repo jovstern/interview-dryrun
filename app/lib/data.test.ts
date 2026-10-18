@@ -87,6 +87,20 @@ describe('fetchBooks', () => {
 
     expect(titles(await fetchBooks({ query: '%' }))).toEqual(['100% Dune'])
   })
+
+  it('fetchBooks throws a short message when the query fails', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const prepare = vi.spyOn(getDb(), 'prepare').mockImplementation(() => {
+      throw new Error('boom')
+    })
+    try {
+      await expect(fetchBooks()).rejects.toThrow('Failed to load books')
+      expect(consoleError).toHaveBeenCalled()
+    } finally {
+      prepare.mockRestore()
+      consoleError.mockRestore()
+    }
+  })
 })
 
 describe('openDb', () => {
