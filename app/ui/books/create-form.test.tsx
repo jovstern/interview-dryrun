@@ -79,6 +79,7 @@ describe('CreateBookForm', () => {
     expect(await screen.findByText('Could not add the book. Please try again.')).toBeInTheDocument()
     expect(screen.getByLabelText('Title')).toHaveValue('Dune')
   })
+
   it('shows "Adding…" and disables the button while submitting', async () => {
     // A promise that never settles holds the action pending.
     createBook.mockReturnValue(new Promise<CreateBookState>(() => {}))

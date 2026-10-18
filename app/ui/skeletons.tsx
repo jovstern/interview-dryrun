@@ -2,6 +2,7 @@
 export function BooksTableSkeleton() {
   return (
     <div role="status" aria-busy="true" aria-label="Loading books" className="w-full text-sm">
+      <span className="sr-only">Loading books…</span>
       <div aria-hidden="true">
         <div className="flex gap-4 border-b border-gray-200 py-2">
           <div className="h-4 w-1/3 animate-pulse rounded bg-gray-100" />

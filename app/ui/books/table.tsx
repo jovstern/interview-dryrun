@@ -11,7 +11,7 @@ export default async function BooksTable({
   status?: BookStatus
 }) {
   const books = await fetchBooks({ query, status })
-  return <BooksList books={books} filtered={query !== '' || status !== undefined} />
+  return <BooksList books={books} filtered={query.trim() !== '' || status !== undefined} />
 }
 
 export function BooksList({ books, filtered }: { books: Book[]; filtered: boolean }) {

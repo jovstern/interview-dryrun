@@ -33,12 +33,19 @@ npm run dev    # http://localhost:3000
 ## Tests
 
 - `npm run check` runs format, lint, typecheck, unit tests (Vitest) and `next build`. Unit tests
-  use an in-memory SQLite database (`:memory:`).
+  use an in-memory SQLite database (plus a temp file for the restart test).
 - `npm run e2e` runs Playwright against a production build on port 3100, using `data/e2e.db`,
   which is deleted at the start of each run. Your `data/reading-list.db` is never touched.
 
 > Playwright reuses any server already listening on :3100, so make sure that port is free
 > before running `npm run e2e`.
+
+## Where things are
+
+- `app/lib/{db,data,actions,definitions,utils}.ts`: database, reads, writes, types, helpers.
+- `app/ui/books/*`: the list, add form, status select and status filter.
+- `app/ui/search.tsx`: the debounced search box; `app/error.tsx`: the error page.
+- `e2e/`: Playwright tests; `scripts/seed.mjs`: sample data for `npm run seed`.
 
 ## How it's built
 
@@ -64,7 +71,8 @@ each change shows the skeleton again while the new results stream in.
 - Loading: a table skeleton while the list streams; "Adding…" on the disabled submit button.
 - Empty: "Your reading list is empty" with a link to add a first book.
 - No match: "No books match your search" with a link that clears search and filter.
-- Error: `app/error.tsx` shows "Something went wrong" with a "Try again" button (`retry`).
+- Error: `app/error.tsx` shows "Something went wrong" with a "Try again" button (`retry`). It
+  replaces the page content when the list cannot load.
 - Inline errors: a failed add shows the action's message above the submit button; a failed
   status save shows a message in the row, and the select goes back to the saved value.
 
@@ -95,7 +103,6 @@ each change shows the skeleton again while the new results stream in.
 - An unknown `status` value in the URL is ignored (shows all), not an error.
 - List order: newest first.
 - Duplicates are allowed (two editions of a book are real).
-- No pagination: a personal list stays small.
 - `npm run seed` adds a few sample books for the demo; the app starts empty without it.
 
 ## Demos
@@ -123,5 +130,3 @@ The work was built in three milestones, each a reviewed pull request.
 - A dark theme using Tailwind `dark:` variants.
 - A no-JavaScript fallback for the status select.
 - Shared button and focus-ring styles, such as a global `:focus-visible` rule.
-- A leftover minor: on an empty database, a whitespace-only search (`?query=%20`) shows "No
-  books match your search" instead of the empty state.

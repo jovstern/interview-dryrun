@@ -5,13 +5,13 @@ A single-user reading list: see your books, add one, move it between "want to re
 
 ## Requirements checklist (the assignment's words)
 
-- [ ] **R1** "A page listing books with title, author and status (want to read / reading / read)."
-- [ ] **R2** "Add a book with a form; title and author are required, with clear validation errors."
-- [ ] **R3** "Change a book's status from the list."
-- [ ] **R4** "Search books by title and filter by status; the search and filter must survive a
+- [x] **R1** "A page listing books with title, author and status (want to read / reading / read)."
+- [x] **R2** "Add a book with a form; title and author are required, with clear validation errors."
+- [x] **R3** "Change a book's status from the list."
+- [x] **R4** "Search books by title and filter by status; the search and filter must survive a
       page refresh and be shareable as a link."
-- [ ] **R5** "Data must persist between server restarts."
-- [ ] **R6** "Show sensible loading, empty and error states."
+- [x] **R5** "Data must persist between server restarts."
+- [x] **R6** "Show sensible loading, empty and error states."
 
 ## Decisions from the question round (the user's)
 
@@ -70,10 +70,11 @@ The search input is debounced 300 ms and uses `router.replace`; the filter is a 
   change (the Suspense `key`). The submit button shows "Adding…" and is disabled while pending.
 - **Empty:** no books at all → "Your reading list is empty" with an "Add your first book" link;
   no matches → "No books match your search" with a "Clear search and filter" link to `/`.
-- **Error:** `app/error.tsx` (and the list's) with a short message and a "Try again" button
-  (`retry`, which re-fetches and re-renders the segment, per the Next 16.4 docs); data functions log the real error and throw "Failed to load books". A failed
-  status save shows an inline message in the row and the select returns to the saved value; a
-  failed add shows the action's `message` above the submit button.
+- **Error:** `app/error.tsx` with a short message and a "Try again" button (`retry`, which
+  re-fetches and re-renders the segment, per the Next 16.4 docs); data functions log the real
+  error and throw "Failed to load books". A failed status save shows an inline message in the
+  row and the select returns to the saved value; a failed add shows the action's `message`
+  above the submit button.
 
 ## Out of scope
 

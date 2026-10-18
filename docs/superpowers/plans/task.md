@@ -219,7 +219,7 @@ Ends with: R6 complete, README shipped.
 
 **Files:** Create `app/error.tsx`, `app/error.test.tsx`
 
-Client component `{ error, retry }` (the installed Next 16.4 `error.md` doc recommends `retry`, which re-fetches and re-renders the segment, over `reset`): `<h2>`"Something went wrong"`</h2>`, the text "We couldn't load your books.", a "Try again" button calling `retry`, and `console.error(error)` in a `useEffect` (syncing with something outside React).
+Client component `{ error, retry }` (the installed Next 16.4 `error.md` doc recommends `retry`, which re-fetches and re-renders the segment, over `reset`): `<h1>`"Something went wrong"`</h1>`, the text "We couldn't load your books.", a "Try again" button calling `retry`, and `console.error(error)` in a `useEffect` (syncing with something outside React).
 
 - [ ] **Step 1–4:** Test `renders the message and retries` (clicking "Try again" calls `retry`) → FAIL → implement → PASS.
 - [ ] **Step 5:** Commit `feat: error state`.

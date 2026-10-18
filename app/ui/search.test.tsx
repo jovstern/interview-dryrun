@@ -63,4 +63,28 @@ describe('Search', () => {
     type('dune')
     expect(replace).toHaveBeenCalledExactlyOnceWith('/?status=read&query=dune')
   })
+
+  it('follows the URL when the query is cleared from outside', () => {
+    nav.search = 'query=zzz'
+    const { rerender } = render(<Search placeholder="Search by title…" />)
+    expect(screen.getByLabelText('Search books by title')).toHaveValue('zzz')
+
+    nav.search = ''
+    rerender(<Search placeholder="Search by title…" />)
+    expect(screen.getByLabelText('Search books by title')).toHaveValue('')
+  })
+
+  it('keeps what is typed when its own write reaches the URL late', () => {
+    const { rerender } = render(<Search placeholder="Search by title…" />)
+    const input = screen.getByLabelText('Search books by title')
+
+    type('dune')
+    expect(replace).toHaveBeenCalledExactlyOnceWith('/?query=dune')
+    fireEvent.change(input, { target: { value: 'dunes' } })
+
+    nav.search = 'query=dune'
+    rerender(<Search placeholder="Search by title…" />)
+    expect(input).toHaveValue('dunes')
+    expect(input).toBe(screen.getByLabelText('Search books by title'))
+  })
 })
