@@ -22,6 +22,15 @@ plan live in `docs/superpowers/`.
   - When finishing, do not show the merge/PR menu: commit on `main` and push if the user
     chose GitHub.
 
+## This machine
+
+- MongoDB runs locally at `mongodb://localhost:27017` (Homebrew service). No Postgres and no
+  Docker.
+- If the assignment does not name a database, recommend SQLite through `better-sqlite3`
+  (tested here; no setup for whoever runs the project). Use raw SQL in `app/lib/data.ts`,
+  as the course does with `postgres`.
+- `gh` is logged in as `jovstern`.
+
 ## Hard rules
 
 - Follow `.claude/skills/stack-conventions/SKILL.md` (the Next.js Learn course patterns) and
