@@ -13,6 +13,7 @@ vi.mock('next/cache')
 vi.mock('next/navigation', () => ({ redirect: vi.fn() }))
 
 beforeEach(() => {
+  expect(getDb().name).toBe(':memory:')
   getDb().exec('DELETE FROM books')
   vi.clearAllMocks()
 })
@@ -67,6 +68,13 @@ describe('createBook', () => {
     const state = await createBook({}, form({ title: 'a'.repeat(201), author: 'Frank Herbert' }))
 
     expect(state.errors?.title).toEqual(['Title must be 200 characters or fewer'])
+    expect(rows()).toEqual([])
+  })
+
+  it('rejects a 101-character author', async () => {
+    const state = await createBook({}, form({ title: 'Dune', author: 'a'.repeat(101) }))
+
+    expect(state.errors?.author).toEqual(['Author must be 100 characters or fewer'])
     expect(rows()).toEqual([])
   })
 

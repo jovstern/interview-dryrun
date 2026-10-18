@@ -15,6 +15,7 @@ vi.mock('next/server', () => ({ connection: async () => {} }))
 const tmpFile = path.join(os.tmpdir(), `reading-list-test-${process.pid}-${Date.now()}.db`)
 
 beforeEach(() => {
+  expect(getDb().name).toBe(':memory:')
   getDb().exec('DELETE FROM books')
 })
 
