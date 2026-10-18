@@ -1,10 +1,16 @@
 import Link from 'next/link'
 import { fetchBooks } from '@/app/lib/data'
-import type { Book } from '@/app/lib/definitions'
+import type { Book, BookStatus } from '@/app/lib/definitions'
 import StatusSelect from './status-select'
 
-export default async function BooksTable() {
-  const books = await fetchBooks()
+export default async function BooksTable({
+  query,
+  status,
+}: {
+  query: string
+  status?: BookStatus
+}) {
+  const books = await fetchBooks({ query, status })
   return <BooksList books={books} />
 }
 
