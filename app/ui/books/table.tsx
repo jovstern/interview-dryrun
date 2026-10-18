@@ -11,18 +11,23 @@ export default async function BooksTable({
   status?: BookStatus
 }) {
   const books = await fetchBooks({ query, status })
-  return <BooksList books={books} />
+  return <BooksList books={books} filtered={query !== '' || status !== undefined} />
 }
 
-export function BooksList({ books }: { books: Book[] }) {
+export function BooksList({ books, filtered }: { books: Book[]; filtered: boolean }) {
   if (books.length === 0) {
-    return (
-      <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-gray-300 p-10 text-center">
-        <p className="text-gray-700">Your reading list is empty</p>
-        <Link href="/books/new" className="font-medium text-blue-700 underline hover:text-blue-900">
-          Add your first book
-        </Link>
-      </div>
+    return filtered ? (
+      <EmptyState
+        message="No books match your search"
+        href="/"
+        linkText="Clear search and filter"
+      />
+    ) : (
+      <EmptyState
+        message="Your reading list is empty"
+        href="/books/new"
+        linkText="Add your first book"
+      />
     )
   }
 
@@ -54,5 +59,24 @@ export function BooksList({ books }: { books: Book[] }) {
         ))}
       </tbody>
     </table>
+  )
+}
+
+function EmptyState({
+  message,
+  href,
+  linkText,
+}: {
+  message: string
+  href: string
+  linkText: string
+}) {
+  return (
+    <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-gray-300 p-10 text-center">
+      <p className="text-gray-700">{message}</p>
+      <Link href={href} className="font-medium text-blue-700 underline hover:text-blue-900">
+        {linkText}
+      </Link>
+    </div>
   )
 }
