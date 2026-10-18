@@ -37,7 +37,7 @@ export default function StatusFilter() {
             href={hrefFor(status)}
             aria-current={isCurrent ? 'page' : undefined}
             className={clsx(
-              'rounded-full border px-3 py-1 text-sm',
+              'rounded-full border px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
               isCurrent
                 ? 'border-black bg-black text-white'
                 : 'border-gray-300 text-gray-700 hover:bg-gray-100',

@@ -4,7 +4,7 @@ import { firstParam, parseStatus } from '@/app/lib/utils'
 import StatusFilter from '@/app/ui/books/status-filter'
 import BooksTable from '@/app/ui/books/table'
 import Search from '@/app/ui/search'
-import { BooksTableSkeleton } from '@/app/ui/skeletons'
+import { BooksTableSkeleton, ControlsSkeleton } from '@/app/ui/skeletons'
 
 export default function Page(props: PageProps<'/'>) {
   return (
@@ -13,12 +13,12 @@ export default function Page(props: PageProps<'/'>) {
         <h1 className="text-2xl font-semibold">Reading list</h1>
         <Link
           href="/books/new"
-          className="rounded bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+          className="rounded bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         >
           Add book
         </Link>
       </div>
-      <Suspense fallback={<div className="h-20" aria-hidden="true" />}>
+      <Suspense fallback={<ControlsSkeleton />}>
         <div className="flex flex-col gap-3">
           <Search placeholder="Search by title…" />
           <StatusFilter />

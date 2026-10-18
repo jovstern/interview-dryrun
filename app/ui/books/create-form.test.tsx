@@ -63,4 +63,34 @@ describe('CreateBookForm', () => {
     expect(screen.getByLabelText('Title')).toHaveValue('Dune')
     expect(screen.getByLabelText('Status')).toHaveDisplayValue('Read')
   })
+
+  it('shows the form-level message when adding fails', async () => {
+    createBook.mockResolvedValue({
+      message: 'Could not add the book. Please try again.',
+      values: { title: 'Dune', author: 'Frank Herbert', status: 'want_to_read' },
+    })
+    const user = userEvent.setup()
+    render(<CreateBookForm />)
+
+    await user.type(screen.getByLabelText('Title'), 'Dune')
+    await user.type(screen.getByLabelText('Author'), 'Frank Herbert')
+    await user.click(screen.getByRole('button', { name: 'Add book' }))
+
+    expect(await screen.findByText('Could not add the book. Please try again.')).toBeInTheDocument()
+    expect(screen.getByLabelText('Title')).toHaveValue('Dune')
+  })
+
+  it('shows "Adding…" and disables the button while submitting', async () => {
+    // A promise that never settles holds the action pending.
+    createBook.mockReturnValue(new Promise<CreateBookState>(() => {}))
+    const user = userEvent.setup()
+    render(<CreateBookForm />)
+
+    await user.type(screen.getByLabelText('Title'), 'Dune')
+    await user.type(screen.getByLabelText('Author'), 'Frank Herbert')
+    await user.click(screen.getByRole('button', { name: 'Add book' }))
+
+    const button = await screen.findByRole('button', { name: 'Adding…' })
+    expect(button).toBeDisabled()
+  })
 })
