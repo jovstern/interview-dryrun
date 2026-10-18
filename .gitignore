@@ -45,3 +45,6 @@ next-env.d.ts
 .superpowers/
 .claude/settings.local.json
 .idea/
+
+# local database
+/data/
