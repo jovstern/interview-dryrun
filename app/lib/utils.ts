@@ -5,3 +5,8 @@ export function parseStatus(value: unknown): BookStatus | undefined {
     ? (value as BookStatus)
     : undefined
 }
+
+/** Escapes `\`, `%` and `_` so the text matches literally in `LIKE ? ESCAPE '\'`. */
+export function escapeLike(text: string): string {
+  return text.replace(/[\\%_]/g, (char) => `\\${char}`)
+}

@@ -5,6 +5,7 @@ import path from 'node:path'
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { getDb, openDb } from './db'
 import { fetchBooks } from './data'
+import type { Book, BookStatus } from './definitions'
 
 vi.hoisted(() => {
   process.env.DATABASE_PATH = ':memory:'
@@ -23,8 +24,14 @@ afterAll(() => {
   for (const suffix of ['', '-wal', '-shm']) fs.rmSync(tmpFile + suffix, { force: true })
 })
 
-function insertBook(title: string, author: string) {
-  getDb().prepare('INSERT INTO books (title, author) VALUES (?, ?)').run(title, author)
+function insertBook(title: string, author: string, status: BookStatus = 'want_to_read') {
+  getDb()
+    .prepare('INSERT INTO books (title, author, status) VALUES (?, ?, ?)')
+    .run(title, author, status)
+}
+
+function titles(books: Book[]) {
+  return books.map((book) => book.title)
 }
 
 describe('fetchBooks', () => {
@@ -44,6 +51,41 @@ describe('fetchBooks', () => {
     ])
     expect(typeof books[0].id).toBe('number')
     expect(books[0].createdAt).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+  })
+
+  it('matches part of the title ignoring case', async () => {
+    insertBook('Dune', 'Frank Herbert')
+    insertBook('Emma', 'Jane Austen')
+
+    expect(titles(await fetchBooks({ query: 'dun' }))).toEqual(['Dune'])
+  })
+
+  it('does not search author', async () => {
+    insertBook('Dune', 'Frank Herbert')
+
+    expect(await fetchBooks({ query: 'Herbert' })).toEqual([])
+  })
+
+  it('filters by status', async () => {
+    insertBook('Dune', 'Frank Herbert', 'reading')
+    insertBook('Emma', 'Jane Austen', 'read')
+
+    expect(titles(await fetchBooks({ status: 'read' }))).toEqual(['Emma'])
+  })
+
+  it('combines query and status', async () => {
+    insertBook('Dune', 'Frank Herbert', 'reading')
+    insertBook('Dune Messiah', 'Frank Herbert', 'read')
+    insertBook('Emma', 'Jane Austen', 'read')
+
+    expect(titles(await fetchBooks({ query: 'dune', status: 'read' }))).toEqual(['Dune Messiah'])
+  })
+
+  it('treats % literally', async () => {
+    insertBook('100% Dune', 'Nobody')
+    insertBook('Dune', 'Frank Herbert')
+
+    expect(titles(await fetchBooks({ query: '%' }))).toEqual(['100% Dune'])
   })
 })
 
