@@ -75,3 +75,34 @@ export async function createBook(
   revalidatePath('/')
   redirect('/')
 }
+
+const UpdateStatusSchema = z.object({
+  status: z.enum(BOOK_STATUSES, { error: 'Choose a status' }),
+})
+
+export type StatusState = { message?: string | null }
+
+export async function updateBookStatus(
+  id: number,
+  _prevState: StatusState,
+  formData: FormData,
+): Promise<StatusState> {
+  const validatedFields = UpdateStatusSchema.safeParse({ status: formData.get('status') })
+
+  if (!validatedFields.success) {
+    return { message: 'Choose a status' }
+  }
+
+  try {
+    const result = getDb()
+      .prepare('UPDATE books SET status = ? WHERE id = ?')
+      .run(validatedFields.data.status, id)
+    if (result.changes === 0) return { message: 'This book no longer exists.' }
+  } catch (error) {
+    console.error('Database error:', error)
+    return { message: 'Could not save the status. Please try again.' }
+  }
+
+  revalidatePath('/')
+  return { message: null }
+}

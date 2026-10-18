@@ -2,7 +2,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { createBook } from './actions'
+import { createBook, updateBookStatus } from './actions'
 import { getDb } from './db'
 
 vi.hoisted(() => {
@@ -86,5 +86,40 @@ describe('createBook', () => {
 
     expect(state.errors?.status).toEqual(['Choose a status'])
     expect(rows()).toEqual([])
+  })
+})
+
+describe('updateBookStatus', () => {
+  function insertBook() {
+    const result = getDb()
+      .prepare('INSERT INTO books (title, author, status) VALUES (?, ?, ?)')
+      .run('Dune', 'Frank Herbert', 'want_to_read')
+    return Number(result.lastInsertRowid)
+  }
+
+  it("changes a book's status", async () => {
+    const id = insertBook()
+    const state = await updateBookStatus(id, {}, form({ status: 'read' }))
+
+    expect(state).toEqual({ message: null })
+    expect(rows()).toEqual([{ title: 'Dune', author: 'Frank Herbert', status: 'read' }])
+    expect(revalidatePath).toHaveBeenCalledWith('/')
+    expect(redirect).not.toHaveBeenCalled()
+  })
+
+  it('rejects an unknown status', async () => {
+    const id = insertBook()
+    const state = await updateBookStatus(id, {}, form({ status: 'finished' }))
+
+    expect(state.message).toBe('Choose a status')
+    expect(rows()).toEqual([{ title: 'Dune', author: 'Frank Herbert', status: 'want_to_read' }])
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('reports a missing book', async () => {
+    const state = await updateBookStatus(999, {}, form({ status: 'read' }))
+
+    expect(state.message).toBe('This book no longer exists.')
+    expect(revalidatePath).not.toHaveBeenCalled()
   })
 })

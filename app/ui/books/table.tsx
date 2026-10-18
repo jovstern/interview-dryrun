@@ -1,9 +1,16 @@
 import Link from 'next/link'
 import { fetchBooks } from '@/app/lib/data'
-import { STATUS_LABELS, type Book } from '@/app/lib/definitions'
+import type { Book, BookStatus } from '@/app/lib/definitions'
+import StatusSelect from './status-select'
 
-export default async function BooksTable() {
-  const books = await fetchBooks()
+export default async function BooksTable({
+  query,
+  status,
+}: {
+  query: string
+  status?: BookStatus
+}) {
+  const books = await fetchBooks({ query, status })
   return <BooksList books={books} />
 }
 
@@ -40,7 +47,9 @@ export function BooksList({ books }: { books: Book[] }) {
           <tr key={book.id} className="border-b border-gray-100 last:border-0">
             <td className="py-2 pr-4 font-medium">{book.title}</td>
             <td className="py-2 pr-4">{book.author}</td>
-            <td className="py-2">{STATUS_LABELS[book.status]}</td>
+            <td className="py-2">
+              <StatusSelect id={book.id} title={book.title} status={book.status} />
+            </td>
           </tr>
         ))}
       </tbody>

@@ -7,16 +7,16 @@ test('adds a book and shows it in the list', async ({ page }) => {
   await expect(page).toHaveURL('/books/new')
 
   // Native `required` blocks a truly empty submit; a space reaches the server, which trims it.
-  await page.getByLabel('Title').fill(' ')
-  await page.getByLabel('Author').fill(' ')
+  await page.getByLabel('Title', { exact: true }).fill(' ')
+  await page.getByLabel('Author', { exact: true }).fill(' ')
   await page.getByRole('button', { name: 'Add book' }).click()
   await expect(page.getByText('Enter a title')).toBeVisible()
   await expect(page.getByText('Enter an author')).toBeVisible()
   await page.waitForTimeout(1500)
 
   const title = `Dune ${Date.now()}`
-  await page.getByLabel('Title').fill(title)
-  await page.getByLabel('Author').fill('Frank Herbert')
+  await page.getByLabel('Title', { exact: true }).fill(title)
+  await page.getByLabel('Author', { exact: true }).fill('Frank Herbert')
   await page.getByRole('button', { name: 'Add book' }).click()
 
   await expect(page).toHaveURL('/')
