@@ -182,7 +182,7 @@ Approach: `const [state, formAction] = useActionState(updateBookStatus.bind(null
 
 **Interfaces — Produces:** `Search({ placeholder }: { placeholder: string })` (client, course pattern: `useSearchParams`, `usePathname`, `useRouter().replace`, `useDebouncedCallback` 300 ms, uncontrolled `defaultValue`, empty value deletes `query`); `StatusFilter()` (client; links "All", "Want to read", "Reading", "Read" whose `href` keeps the current `query` and sets/deletes `status`; the active one has `aria-current="page"`); `BooksTable({ query, status }: { query: string; status?: BookStatus })`.
 
-Page: `props.searchParams` awaited inside an async component under `<Suspense>` (Cache Components requires runtime data inside Suspense — follow the build error's fix if it names another); `query = searchParams.query ?? ''`, `status = parseStatus(searchParams.status)`; results `<Suspense key={query + (status ?? '')} fallback={<BooksTableSkeleton />}>`. `Search` and `StatusFilter` use `useSearchParams`, so they sit inside `<Suspense>` too.
+Page: `props.searchParams` awaited inside an async component under `<Suspense>` (Cache Components requires runtime data inside Suspense — follow the build error's fix if it names another); `query = firstParam(searchParams.query) ?? ''`, `status = parseStatus(firstParam(searchParams.status))`; results `` <Suspense key={`${query}|${status ?? ''}`} fallback={<BooksTableSkeleton />}> ``. `Search` and `StatusFilter` use `useSearchParams`, so they sit inside `<Suspense>` too.
 
 - [ ] **Step 1: Tests** (mock `next/navigation`): Search — `writes the query to the URL after typing` (fake timers, 300 ms → `replace('/?query=dune')`), `removes query when cleared`, `keeps status` (`?status=read` + type → `/?status=read&query=dune`). StatusFilter — `marks the current status` and `keeps the query in each link` (`?query=dune` → "Reading" href `/?query=dune&status=reading`, "All" href `/?query=dune`).
 - [ ] **Step 2–4:** FAIL → implement and wire into the page → PASS; check `/?query=du&status=reading` in the browser; lint + typecheck.
@@ -219,9 +219,9 @@ Ends with: R6 complete, README shipped.
 
 **Files:** Create `app/error.tsx`, `app/error.test.tsx`
 
-Client component `{ error, reset }` (check the installed `error.md` doc for the current prop names): `<h2>`"Something went wrong"`</h2>`, the text "We couldn't load your books.", a "Try again" button calling `reset`, and `console.error(error)` in a `useEffect` (syncing with something outside React).
+Client component `{ error, retry }` (the installed Next 16.4 `error.md` doc recommends `retry`, which re-fetches and re-renders the segment, over `reset`): `<h2>`"Something went wrong"`</h2>`, the text "We couldn't load your books.", a "Try again" button calling `retry`, and `console.error(error)` in a `useEffect` (syncing with something outside React).
 
-- [ ] **Step 1–4:** Test `renders the message and retries` (clicking "Try again" calls `reset`) → FAIL → implement → PASS.
+- [ ] **Step 1–4:** Test `renders the message and retries` (clicking "Try again" calls `retry`) → FAIL → implement → PASS.
 - [ ] **Step 5:** Commit `feat: error state`.
 
 ### Task M3.3: Loading skeleton and accessibility pass

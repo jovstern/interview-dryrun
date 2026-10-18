@@ -71,7 +71,7 @@ The search input is debounced 300 ms and uses `router.replace`; the filter is a 
 - **Empty:** no books at all → "Your reading list is empty" with an "Add your first book" link;
   no matches → "No books match your search" with a "Clear search and filter" link to `/`.
 - **Error:** `app/error.tsx` (and the list's) with a short message and a "Try again" button
-  (`reset`); data functions log the real error and throw "Failed to load books". A failed
+  (`retry`, which re-fetches and re-renders the segment, per the Next 16.4 docs); data functions log the real error and throw "Failed to load books". A failed
   status save shows an inline message in the row and the select returns to the saved value; a
   failed add shows the action's `message` above the submit button.
 
