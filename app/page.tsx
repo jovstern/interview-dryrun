@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { parseStatus } from '@/app/lib/utils'
+import { firstParam, parseStatus } from '@/app/lib/utils'
 import StatusFilter from '@/app/ui/books/status-filter'
 import BooksTable from '@/app/ui/books/table'
 import Search from '@/app/ui/search'
@@ -33,10 +33,10 @@ export default function Page(props: PageProps<'/'>) {
 
 async function FilteredBooks({ searchParams }: { searchParams: PageProps<'/'>['searchParams'] }) {
   const params = await searchParams
-  const query = typeof params.query === 'string' ? params.query : ''
-  const status = parseStatus(params.status)
+  const query = firstParam(params.query) ?? ''
+  const status = parseStatus(firstParam(params.status))
   return (
-    <Suspense key={query + (status ?? '')} fallback={<BooksTableSkeleton />}>
+    <Suspense key={`${query}|${status ?? ''}`} fallback={<BooksTableSkeleton />}>
       <BooksTable query={query} status={status} />
     </Suspense>
   )

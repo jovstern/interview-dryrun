@@ -87,11 +87,22 @@ test('search and filter survive a reload and work from a shared link', async ({ 
   ).toHaveAttribute('aria-current', 'page')
   await expectOnlyAlpha(p2)
   await p2.waitForTimeout(1500)
+
+  // Both titles contain the id, so only the status can exclude Alpha.
+  await p2.goto(`/?query=${id}&status=read`)
+  await expect(p2.getByRole('row').filter({ hasText: beta })).toBeVisible()
+  await expect(p2.getByRole('row').filter({ hasText: alpha })).toHaveCount(0)
+  await p2.waitForTimeout(1500)
 })
 
 test('ignores an unknown status in the URL', async ({ page }) => {
   await page.goto('/?status=bogus')
   await expect(page.getByLabel('Search books by title')).toBeVisible()
+  await expect(
+    page
+      .getByRole('table', { name: 'Your books' })
+      .or(page.getByText('Your reading list is empty')),
+  ).toBeVisible()
   await expect(
     page
       .getByRole('navigation', { name: 'Filter by status' })

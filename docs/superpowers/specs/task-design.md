@@ -57,7 +57,7 @@ run. Tests never touch `data/reading-list.db`.
 
 | Route | Screen | Reads | Writes |
 |---|---|---|---|
-| `/` | The list: search box, status filter, table of books with a status select per row, "Add book" link | `page.tsx` awaits `searchParams` (`query`, `status`) and passes them to the async server component `BooksTable`, which calls `fetchBooks({ query, status })` from `app/lib/data.ts`. The table sits in `<Suspense key={query + status} fallback={<BooksTableSkeleton />}>`. | Status select: `updateBookStatus.bind(null, id)` Server Action, a `<form>` submitted on change, `useActionState` for the error and `useOptimistic` for the shown value; `revalidatePath('/')`. |
+| `/` | The list: search box, status filter, table of books with a status select per row, "Add book" link | `page.tsx` awaits `searchParams` (`query`, `status`) and passes them to the async server component `BooksTable`, which calls `fetchBooks({ query, status })` from `app/lib/data.ts`. The table sits in `` <Suspense key={`${query}|${status ?? ''}`} fallback={<BooksTableSkeleton />}> ``. | Status select: `updateBookStatus.bind(null, id)` Server Action called from the select's `onChange` inside `startTransition` (not a `<form>`, because React 19 resets a form after its action), `useActionState` for the error and `useOptimistic` for the shown value; `revalidatePath('/')`. |
 | `/books/new` | Add book form: title, author, status | none | `createBook` Server Action with `useActionState`; Zod field errors under each field; typed values kept on error; on success `revalidatePath('/')` then `redirect('/')`. |
 
 View state (search text, status filter) lives only in the URL: `/?query=dune&status=reading`.

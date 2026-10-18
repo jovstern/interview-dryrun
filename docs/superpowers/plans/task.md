@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Follow `.claude/skills/stack-conventions/SKILL.md` and `.claude/skills/quality-gates/SKILL.md`. Reads happen in Server Components through `app/lib/data.ts`; writes go through Server Actions in `app/lib/actions.ts` with `useActionState`; view state lives in the URL. A Route Handler, `useEffect` fetch, client-side fetch of the app's own data, or an unjustified `useReducer` is an Important finding.
-- **Data, `/`:** `page.tsx` awaits `searchParams`, passes `query` and `status` to async `BooksTable`, which awaits `fetchBooks`; wrapped in `<Suspense key={query + status} fallback={<BooksTableSkeleton />}>`. Writes: `updateBookStatus.bind(null, id)` + `useActionState` + `useOptimistic`.
+- **Data, `/`:** `page.tsx` awaits `searchParams`, passes `query` and `status` to async `BooksTable`, which awaits `fetchBooks`; wrapped in `` <Suspense key={`${query}|${status ?? ''}`} fallback={<BooksTableSkeleton />}> ``. Writes: `updateBookStatus.bind(null, id)` + `useActionState` + `useOptimistic`.
 - **Data, `/books/new`:** no reads. Write: `createBook` + `useActionState`; `revalidatePath('/')` then `redirect('/')` outside try/catch.
 - `better-sqlite3` is synchronous: every function in `data.ts` calls `await connection()` (from `next/server`) before querying (see `node_modules/next/dist/docs/01-app/01-getting-started/08-caching.md`, "Good to know" on embedded databases). No `'use cache'` on book reads.
 - DB file: `process.env.DATABASE_PATH ?? 'data/reading-list.db'`. Tests never open `data/reading-list.db`: unit tests use `:memory:` or a temp file, Playwright uses `data/e2e.db`.
