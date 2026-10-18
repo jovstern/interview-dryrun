@@ -29,7 +29,7 @@ The app is already scaffolded (Next.js, all gates green). Read `CLAUDE.md`,
 Read the assignment twice. List every requirement as a checklist (quote the assignment's
 words). Then ask **one** `AskUserQuestion` call with at most 4 questions, only those whose
 answer changes what gets built. Each question puts your recommended option first. Typical
-ones: which database if not given, what to cut if time runs short, ambiguous requirements,
+ones: which database (default: the Neon Postgres in `.env`, see CLAUDE.md), what to cut if time runs short, ambiguous requirements,
 whether to push to GitHub at the end. Everything else: decide, and list it as an assumption.
 
 ## 3. Spec and plan, one approval (target: 15 minutes)

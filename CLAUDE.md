@@ -26,9 +26,18 @@ plan live in `docs/superpowers/`.
 
 - MongoDB runs locally at `mongodb://localhost:27017` (Homebrew service). No Postgres and no
   Docker.
-- If the assignment does not name a database, recommend SQLite through `better-sqlite3`
-  (tested here; no setup for whoever runs the project). Use raw SQL in `app/lib/data.ts`,
-  as the course does with `postgres`.
+- **Default database: Neon Postgres** (Vercel Storage resource `interview-task-neon`,
+  Frankfurt, empty). `POSTGRES_URL` is in `.env` (git-ignored; never print, read or commit
+  it). Use it exactly as the Next.js course does: the `postgres` package (installed), one
+  client in `app/lib/db.ts` (`postgres(process.env.POSTGRES_URL!, { ssl: 'require' })`),
+  tagged-template SQL in `app/lib/data.ts` and `app/lib/actions.ts`, and a seed script that
+  creates the tables and inserts sample data. `node --env-file=.env scripts/db-check.mjs`
+  checks that it answers.
+- Tests use the same database only with their own table-name prefix or schema, and clean up
+  after themselves; never drop or wipe the app's tables from a test.
+- If the assignment names another database, use that. If it must run on someone else's
+  machine without our credentials, offer SQLite through `better-sqlite3` instead (tested
+  here, no setup).
 - `gh` is logged in as `jovstern`.
 
 ## Hard rules
