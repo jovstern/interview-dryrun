@@ -24,20 +24,19 @@ plan live in `docs/superpowers/`.
 
 ## This machine
 
-- MongoDB runs locally at `mongodb://localhost:27017` (Homebrew service). No Postgres and no
-  Docker.
-- **Default database: Neon Postgres** (Vercel Storage resource `interview-task-neon`,
-  Frankfurt, empty). `POSTGRES_URL` is in `.env` (git-ignored; never print, read or commit
-  it). Use it exactly as the Next.js course does: the `postgres` package (installed), one
-  client in `app/lib/db.ts` (`postgres(process.env.POSTGRES_URL!, { ssl: 'require' })`),
-  tagged-template SQL in `app/lib/data.ts` and `app/lib/actions.ts`, and a seed script that
-  creates the tables and inserts sample data. `node --env-file=.env scripts/db-check.mjs`
-  checks that it answers.
-- Tests use the same database only with their own table-name prefix or schema, and clean up
-  after themselves; never drop or wipe the app's tables from a test.
-- If the assignment names another database, use that. If it must run on someone else's
-  machine without our credentials, offer SQLite through `better-sqlite3` instead (tested
-  here, no setup).
+- **Databases:** the user chooses the database in `/task`'s question round. Never pick one
+  or connect to one before they answer. The options available on this machine:
+  - **Neon Postgres:** Vercel Storage resource `interview-task-neon`, Frankfurt, empty.
+    `POSTGRES_URL` is in `.env` (git-ignored; never print, read or commit it). Use it as the
+    Next.js course does: the `postgres` package (installed), one client in `app/lib/db.ts`
+    (`postgres(process.env.POSTGRES_URL!, { ssl: 'require' })`), tagged-template SQL in
+    `app/lib/data.ts` and `app/lib/actions.ts`, and a seed script.
+    `node --env-file=.env scripts/db-check.mjs` checks that it answers.
+  - **SQLite** through `better-sqlite3`: tested here, no setup, and runs on anyone's machine.
+  - **MongoDB:** runs locally at `mongodb://localhost:27017` (Homebrew service).
+  - There is no local Postgres and no Docker.
+- Tests never drop or wipe the app's data: they use their own database file, schema or
+  table prefix, and clean up after themselves.
 - `gh` is logged in as `jovstern`.
 
 ## Hard rules

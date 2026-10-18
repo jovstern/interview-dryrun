@@ -29,8 +29,18 @@ The app is already scaffolded (Next.js, all gates green). Read `CLAUDE.md`,
 Read the assignment twice. List every requirement as a checklist (quote the assignment's
 words). Then ask **one** `AskUserQuestion` call with at most 4 questions, only those whose
 answer changes what gets built. Each question puts your recommended option first. Typical
-ones: which database (default: the Neon Postgres in `.env`, see CLAUDE.md), what to cut if time runs short, ambiguous requirements,
-whether to push to GitHub at the end. Everything else: decide, and list it as an assumption.
+ones: what to cut if time runs short, ambiguous requirements, whether to push to GitHub at
+the end. Everything else: decide, and list it as an assumption.
+
+**The database is always one of the questions; never pick it yourself.** Unless the
+assignment names one, offer these options (see "Databases" in CLAUDE.md), each with a
+one-line trade-off for this assignment, and recommend one with the reason:
+- Neon Postgres (the empty `interview-task-neon` in `.env`),
+- SQLite through `better-sqlite3` (local file, runs anywhere without credentials),
+- local MongoDB,
+- in-memory / JSON file (only if the assignment needs no real persistence).
+If the assignment names a database, still confirm it in the question. Nothing touches a
+database, `.env` or a database package before the user answers.
 
 ## 3. Spec and plan, one approval (target: 15 minutes)
 
