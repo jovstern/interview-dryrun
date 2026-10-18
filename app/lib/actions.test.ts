@@ -1,5 +1,21 @@
-import { describe, expect, it } from 'vitest'
-import { greet } from './actions'
+// @vitest-environment node
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createBook } from './actions'
+import { getDb } from './db'
+
+vi.hoisted(() => {
+  process.env.DATABASE_PATH = ':memory:'
+})
+
+vi.mock('next/cache')
+vi.mock('next/navigation', () => ({ redirect: vi.fn() }))
+
+beforeEach(() => {
+  getDb().exec('DELETE FROM books')
+  vi.clearAllMocks()
+})
 
 function form(values: Record<string, string>) {
   const data = new FormData()
@@ -7,13 +23,60 @@ function form(values: Record<string, string>) {
   return data
 }
 
-describe('greet', () => {
-  it('greets by name', async () => {
-    expect(await greet({}, form({ name: ' Ada ' }))).toEqual({ message: 'Hello, Ada!' })
+function rows() {
+  return getDb().prepare('SELECT title, author, status FROM books').all()
+}
+
+describe('createBook', () => {
+  it('adds a trimmed book and redirects home', async () => {
+    await createBook({}, form({ title: ' Dune ', author: ' Frank Herbert ' }))
+
+    expect(rows()).toEqual([{ title: 'Dune', author: 'Frank Herbert', status: 'want_to_read' }])
+    expect(revalidatePath).toHaveBeenCalledWith('/')
+    expect(redirect).toHaveBeenCalledWith('/')
   })
 
-  it('returns a field error when the name is empty', async () => {
-    const state = await greet({}, form({ name: '' }))
-    expect(state.errors?.name).toEqual(['Enter your name'])
+  it('saves the chosen status', async () => {
+    await createBook({}, form({ title: 'Dune', author: 'Frank Herbert', status: 'reading' }))
+
+    expect(rows()).toEqual([{ title: 'Dune', author: 'Frank Herbert', status: 'reading' }])
+  })
+
+  it('requires title and author', async () => {
+    const input = { title: '', author: '', status: 'want_to_read' }
+    const state = await createBook({}, form(input))
+
+    expect(state.errors?.title).toEqual(['Enter a title'])
+    expect(state.errors?.author).toEqual(['Enter an author'])
+    expect(state.message).toBe('Fix the highlighted fields.')
+    expect(state.values).toEqual(input)
+    expect(rows()).toEqual([])
+    expect(redirect).not.toHaveBeenCalled()
+  })
+
+  it('treats whitespace-only fields as empty', async () => {
+    const state = await createBook({}, form({ title: '   ', author: '   ' }))
+
+    expect(state.errors?.title).toEqual(['Enter a title'])
+    expect(state.errors?.author).toEqual(['Enter an author'])
+    expect(state.values).toEqual({ title: '   ', author: '   ', status: '' })
+    expect(rows()).toEqual([])
+  })
+
+  it('rejects a 201-character title', async () => {
+    const state = await createBook({}, form({ title: 'a'.repeat(201), author: 'Frank Herbert' }))
+
+    expect(state.errors?.title).toEqual(['Title must be 200 characters or fewer'])
+    expect(rows()).toEqual([])
+  })
+
+  it('rejects an unknown status', async () => {
+    const state = await createBook(
+      {},
+      form({ title: 'Dune', author: 'Frank Herbert', status: 'finished' }),
+    )
+
+    expect(state.errors?.status).toEqual(['Choose a status'])
+    expect(rows()).toEqual([])
   })
 })
