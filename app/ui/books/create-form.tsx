@@ -23,7 +23,7 @@ export default function CreateBookForm() {
           required
           maxLength={200}
           defaultValue={state.values?.title}
-          className="rounded border border-gray-300 px-3 py-2"
+          className="rounded border border-gray-300 px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600"
           aria-describedby="title-error"
           aria-invalid={state.errors?.title ? true : undefined}
         />
@@ -46,7 +46,7 @@ export default function CreateBookForm() {
           required
           maxLength={100}
           defaultValue={state.values?.author}
-          className="rounded border border-gray-300 px-3 py-2"
+          className="rounded border border-gray-300 px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600"
           aria-describedby="author-error"
           aria-invalid={state.errors?.author ? true : undefined}
         />
@@ -70,7 +70,7 @@ export default function CreateBookForm() {
           id="status"
           name="status"
           defaultValue={state.values?.status || 'want_to_read'}
-          className="rounded border border-gray-300 px-3 py-2"
+          className="rounded border border-gray-300 px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600"
           aria-describedby="status-error"
           aria-invalid={state.errors?.status ? true : undefined}
         >
@@ -97,11 +97,14 @@ export default function CreateBookForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+          className="rounded bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
         >
           {isPending ? 'Adding…' : 'Add book'}
         </button>
-        <Link href="/" className="text-sm font-medium text-gray-700 underline hover:text-gray-900">
+        <Link
+          href="/"
+          className="text-sm font-medium text-gray-700 underline hover:text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        >
           Cancel
         </Link>
       </div>

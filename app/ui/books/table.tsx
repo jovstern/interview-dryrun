@@ -21,12 +21,14 @@ export function BooksList({ books, filtered }: { books: Book[]; filtered: boolea
         message="No books match your search"
         href="/"
         linkText="Clear search and filter"
+        variant="secondary"
       />
     ) : (
       <EmptyState
         message="Your reading list is empty"
         href="/books/new"
         linkText="Add your first book"
+        variant="primary"
       />
     )
   }
@@ -62,19 +64,29 @@ export function BooksList({ books, filtered }: { books: Book[]; filtered: boolea
   )
 }
 
+// Primary matches the "Add book" button on the page; secondary is its outlined counterpart.
+const LINK_STYLES = {
+  primary:
+    'rounded bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
+  secondary:
+    'rounded border border-gray-300 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
+}
+
 function EmptyState({
   message,
   href,
   linkText,
+  variant,
 }: {
   message: string
   href: string
   linkText: string
+  variant: 'primary' | 'secondary'
 }) {
   return (
     <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-gray-300 p-10 text-center">
       <p className="text-gray-700">{message}</p>
-      <Link href={href} className="font-medium text-blue-700 underline hover:text-blue-900">
+      <Link href={href} className={LINK_STYLES[variant]}>
         {linkText}
       </Link>
     </div>

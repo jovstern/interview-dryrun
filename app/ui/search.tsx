@@ -27,7 +27,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
       <input
         id="search"
         type="search"
-        className="w-full rounded border border-gray-300 px-3 py-2 text-sm placeholder:text-gray-500"
+        className="w-full rounded border border-gray-300 px-3 py-2 text-sm placeholder:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         placeholder={placeholder}
         defaultValue={searchParams.get('query') ?? ''}
         onChange={(event) => handleSearch(event.target.value)}

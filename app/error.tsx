@@ -12,12 +12,12 @@ export default function ErrorPage({ error, retry }: { error: unknown; retry: () 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-6 p-8">
       <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-gray-300 p-10 text-center">
-        <h2 className="text-lg font-semibold">Something went wrong</h2>
+        <h1 className="text-lg font-semibold">Something went wrong</h1>
         <p className="text-gray-700">We couldn&apos;t load your books.</p>
         <button
           type="button"
           onClick={() => retry()}
-          className="font-medium text-blue-700 underline hover:text-blue-900"
+          className="rounded bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         >
           Try again
         </button>

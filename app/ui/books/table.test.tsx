@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import type { Book } from '@/app/lib/definitions'
+import { BooksTableSkeleton } from '@/app/ui/skeletons'
 import { BooksList } from './table'
 
 const dune: Book = {
@@ -39,5 +40,14 @@ describe('BooksList', () => {
     )
     expect(screen.queryByText('Your reading list is empty')).not.toBeInTheDocument()
     expect(screen.queryByRole('table')).not.toBeInTheDocument()
+  })
+})
+
+describe('BooksTableSkeleton', () => {
+  it('skeleton is announced as loading', () => {
+    render(<BooksTableSkeleton />)
+    const skeleton = screen.getByLabelText('Loading books')
+    expect(skeleton).toHaveAttribute('aria-busy', 'true')
+    expect(screen.getByRole('status', { name: 'Loading books' })).toBe(skeleton)
   })
 })

@@ -42,7 +42,7 @@ export default function StatusSelect({
         onChange={(event) => save(event.currentTarget.value)}
         aria-label={`Status of ${title}`}
         aria-describedby={errorId}
-        className="rounded border border-gray-300 px-2 py-1"
+        className="rounded border border-gray-300 px-2 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
       >
         {BOOK_STATUSES.map((option) => (
           <option key={option} value={option}>
