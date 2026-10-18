@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test('adds a book and shows it in the list', async ({ page }) => {
   await page.goto('/')
+  await page.waitForTimeout(1000)
   await page.getByRole('link', { name: 'Add book' }).click()
   await expect(page).toHaveURL('/books/new')
 
@@ -11,7 +12,7 @@ test('adds a book and shows it in the list', async ({ page }) => {
   await page.getByRole('button', { name: 'Add book' }).click()
   await expect(page.getByText('Enter a title')).toBeVisible()
   await expect(page.getByText('Enter an author')).toBeVisible()
-  await page.waitForTimeout(600)
+  await page.waitForTimeout(1500)
 
   const title = `Dune ${Date.now()}`
   await page.getByLabel('Title').fill(title)
@@ -23,8 +24,9 @@ test('adds a book and shows it in the list', async ({ page }) => {
   await expect(row).toBeVisible()
   await expect(row).toContainText('Frank Herbert')
   await expect(row).toContainText('Want to read')
-  await page.waitForTimeout(600)
+  await page.waitForTimeout(1500)
 
   await page.reload()
   await expect(page.getByRole('row').filter({ hasText: title })).toBeVisible()
+  await page.waitForTimeout(1500)
 })
